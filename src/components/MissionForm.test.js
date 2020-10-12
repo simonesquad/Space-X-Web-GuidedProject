@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import MissionForm from './MissionForm';
 
 describe('MissionForm Tests',()=>{
@@ -18,11 +18,26 @@ describe('MissionForm Tests',()=>{
 
     test('renders button when isFetchingData is false', ()=>{
         render(<MissionForm isFetchingData={false}/>);
-        expect(screen.getByText(/get data/i)).not.toBeNull();
+        expect(screen.getByRole("button")).not.toBeNull();
         expect(screen.queryByText(/we are fetching data/i)).toBeNull();
     });
 
     test('calls getData when button is pressed', ()=>{
+        const mockGetData = jest.fn(()=>{
+            return("warren");
+        });
+
+        render(<MissionForm getData={()=>{mockGetData(122, "warren")}}/>);
+
+        const button = screen.getByRole("button");
+        fireEvent.click(button);
+
+        mockGetData.mockReturnValueOnce("warren");
+
+        console.log(mockGetData.mock);
+
+        expect(mockGetData.mock.calls.length === 1);
+       
 
     });
 });
